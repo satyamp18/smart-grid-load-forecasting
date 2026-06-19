@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 import smartgrid.models
 
+from smartgrid.api.v1.zone import router as zone_router
 from smartgrid.api.v1.health import router as health_router
 from smartgrid.core.logging import setup_logging
 from smartgrid.db.base import Base
@@ -18,6 +19,11 @@ app = FastAPI(
 )
 
 # Health Routes
+app.include_router(
+    zone_router,
+    prefix="/api/v1",
+    tags=["Zone"]
+)
 app.include_router(
     health_router,
     prefix="/api/v1",
