@@ -10,8 +10,9 @@ class SmartMeter(Base):
     id = Column(Integer, primary_key=True)
 
     meter_code = Column(
-        String,
-        unique=True
+    String,
+    unique=True,
+    nullable=False
     )
 
     zone_id = Column(

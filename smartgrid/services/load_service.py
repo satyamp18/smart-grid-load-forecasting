@@ -1,8 +1,11 @@
+from datetime import datetime
+
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from smartgrid.models.reading import MeterReading
+from smartgrid.models.load_report import LoadReport
 from smartgrid.models.meter import SmartMeter
-from smartgrid.models.zone import Zone
+from smartgrid.models.reading import MeterReading
 
 
 class LoadService:
@@ -10,22 +13,47 @@ class LoadService:
     def calculate_zone_load(
         self,
         db: Session,
-        zone_id: int
+        zone_id: int,
     ):
 
         total_load = (
-            db.query(MeterReading.power_kw)
+            db.query(
+                func.sum(MeterReading.power_kw)
+            )
             .join(
                 SmartMeter,
-                MeterReading.meter_id == SmartMeter.id
+                MeterReading.meter_id == SmartMeter.id,
             )
             .filter(
                 SmartMeter.zone_id == zone_id
             )
-            .all()
+            .scalar()
         )
 
-        return sum(
-            load[0] for load in total_load
-            if load[0] is not None
+        if total_load is None:
+            total_load = 0
+
+        return total_load
+
+    def generate_load_report(
+        self,
+        db: Session,
+        zone_id: int,
+    ):
+
+        total_load = self.calculate_zone_load(
+            db,
+            zone_id,
         )
+
+        report = LoadReport(
+            zone_id=zone_id,
+            total_load_kw=total_load,
+            report_time=datetime.utcnow(),
+        )
+
+        db.add(report)
+        db.commit()
+        db.refresh(report)
+
+        return report
