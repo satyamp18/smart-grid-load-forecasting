@@ -8,5 +8,6 @@ def health():
     return {
         "status": "ok",
         "service": "Smart Grid API",
+        "version": "1.0.0",
         "timestamp": datetime.utcnow().isoformat()
     }
