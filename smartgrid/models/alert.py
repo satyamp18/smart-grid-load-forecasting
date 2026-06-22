@@ -1,6 +1,7 @@
 from sqlalchemy import *
 
-from app.db.base import Base
+from smartgrid.db.base import Base
+
 
 class Alert(Base):
 
@@ -13,8 +14,17 @@ class Alert(Base):
         ForeignKey("zones.id")
     )
 
-    message = Column(String)
+    message = Column(
+    String,
+    nullable=False
+    )
 
-    severity = Column(String)
+    severity = Column(
+    String,
+    nullable=False
+    )
 
-    created_at = Column(DateTime)
+    created_at = Column(
+    DateTime,
+    nullable=False
+    )

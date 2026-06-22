@@ -1,5 +1,8 @@
+from datetime import datetime
+
 from sqlalchemy.orm import Session
 
+from smartgrid.models.alert import Alert
 from smartgrid.models.zone import Zone
 from smartgrid.services.load_service import LoadService
 
@@ -12,7 +15,7 @@ class AlertService:
     def check_overload(
         self,
         db: Session,
-        zone_id: int
+        zone_id: int,
     ):
 
         zone = (
@@ -26,26 +29,26 @@ class AlertService:
 
         current_load = self.load_service.calculate_zone_load(
             db,
-            zone_id
+            zone_id,
         )
 
         utilization = (
-            current_load /
-            zone.max_capacity_kw
+            current_load / zone.max_capacity_kw
         ) * 100
 
         if utilization >= 90:
 
-            return {
-                "status": "OVERLOAD",
-                "zone": zone.zone_name,
-                "current_load": current_load,
-                "capacity": zone.max_capacity_kw,
-                "utilization": utilization
-            }
+            alert = Alert(
+                zone_id=zone_id,
+                message=f"{zone.zone_name} exceeded 90% capacity",
+                severity="HIGH",
+                created_at=datetime.utcnow(),
+            )
 
-        return {
-            "status": "NORMAL",
-            "zone": zone.zone_name,
-            "utilization": utilization
-        }
+            db.add(alert)
+            db.commit()
+            db.refresh(alert)
+
+            return alert
+
+        return None

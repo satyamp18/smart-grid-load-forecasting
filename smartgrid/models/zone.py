@@ -15,7 +15,10 @@ class Zone(Base):
         nullable=False
     )
 
-    max_capacity_kw = Column(Float)
+    max_capacity_kw = Column(
+    Float,
+    nullable=False
+    )
 
     meters = relationship(
         "SmartMeter",

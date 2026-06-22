@@ -21,14 +21,25 @@ class MeterReading(Base):
         Integer,
         ForeignKey("smart_meters.id")
     )
+    voltage = Column(
+    Float,
+    nullable=False
+    )
 
-    voltage = Column(Float)
+    current = Column(
+    Float,
+    nullable=False
+    )
 
-    current = Column(Float)
+    power_kw = Column(
+    Float,
+    nullable=False
+    )
 
-    power_kw = Column(Float)
-
-    timestamp = Column(DateTime)
+    timestamp = Column(
+    DateTime,
+    nullable=False
+    )
 
     meter = relationship(
         "SmartMeter",

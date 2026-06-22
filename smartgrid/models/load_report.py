@@ -1,6 +1,7 @@
 from sqlalchemy import *
 
-from app.db.base import Base
+from smartgrid.db.base import Base
+
 
 class LoadReport(Base):
 
@@ -13,6 +14,12 @@ class LoadReport(Base):
         ForeignKey("zones.id")
     )
 
-    total_load_kw = Column(Float)
+    total_load_kw = Column(
+    Float,
+    nullable=False
+    )
 
-    report_time = Column(DateTime)
+    report_time = Column(
+    DateTime,
+    nullable=False
+    )

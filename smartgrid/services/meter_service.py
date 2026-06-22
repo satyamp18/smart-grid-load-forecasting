@@ -12,3 +12,9 @@ class MeterService:
 
     def create_meter(self, db: Session, meter):
         return self.repo.create(db, meter)
+    
+    def get_meter(self, db: Session, meter_id: int):
+        return self.repo.get_by_id(db, meter_id)
+
+    def delete_meter(self, db: Session, meter_id: int):
+        return self.repo.delete(db, meter_id)
