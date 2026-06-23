@@ -1,8 +1,8 @@
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict
 
 
 class MeterCreate(BaseModel):
-    meter_code: str = Field(..., min_length=3, max_length=50)
+    meter_code: str
     zone_id: int
 
 

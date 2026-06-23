@@ -8,6 +8,13 @@ from smartgrid.core.logging import setup_logging
 from smartgrid.db.base import Base
 from smartgrid.db.session import engine
 from smartgrid.core.config import settings
+from smartgrid.api.v1.meter import router as meter_router
+from smartgrid.api.v1.reading import router as reading_router
+from smartgrid.api.v1.analytics import router as analytics_router
+from smartgrid.api.v1.alert import router as alert_router
+from smartgrid.api.v1.load_report import (
+    router as load_report_router,
+)
 import logging
 
 # module logger
@@ -27,6 +34,32 @@ app.include_router(
     zone_router,
     prefix="/api/v1",
     tags=["Zone"]
+)
+
+app.include_router(
+    meter_router,
+    prefix="/api/v1",
+    tags=["Meter"]
+)
+app.include_router(
+    reading_router,
+    prefix="/api/v1",
+    tags=["Reading"],
+)
+app.include_router(
+    analytics_router,
+    prefix="/api/v1",
+    tags=["Analytics"],
+)
+app.include_router(
+    alert_router,
+    prefix="/api/v1",
+    tags=["Alert"],
+)
+app.include_router(
+    load_report_router,
+    prefix="/api/v1",
+    tags=["Load Report"],
 )
 app.include_router(
     health_router,

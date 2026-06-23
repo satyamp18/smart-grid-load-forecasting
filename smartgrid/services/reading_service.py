@@ -15,31 +15,13 @@ class ReadingService:
     def get_reading(self, db: Session, reading_id: int):
         return self.repo.get_by_id(db, reading_id)
 
-    def create_reading(
-        self,
-        db: Session,
-        meter_id: int,
-        voltage: float,
-        current: float,
-        timestamp,
-    ):
+    def create_reading(self, db: Session, reading: MeterReading):
 
-        # Power calculation
-        power_kw = (voltage * current) / 1000
-
-        reading = MeterReading(
-            meter_id=meter_id,
-            voltage=voltage,
-            current=current,
-            power_kw=power_kw,
-            timestamp=timestamp,
-        )
+        reading.power_kw = (
+            reading.voltage * reading.current
+        ) / 1000
 
         return self.repo.create(db, reading)
 
-    def delete_reading(
-        self,
-        db: Session,
-        reading_id: int,
-    ):
+    def delete_reading(self, db: Session, reading_id: int):
         return self.repo.delete(db, reading_id)

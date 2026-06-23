@@ -1,9 +1,9 @@
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict
 
 
 class ZoneCreate(BaseModel):
-    zone_name: str = Field(..., min_length=3, max_length=100)
-    max_capacity_kw: float = Field(..., gt=0)
+    zone_name: str
+    max_capacity_kw: float
 
 
 class ZoneResponse(BaseModel):
