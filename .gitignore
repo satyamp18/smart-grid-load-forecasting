@@ -64,3 +64,4 @@ Thumbs.db
 redis-stable/
 data/alerts.log
 dump.rdb
+celerybeat-schedule*
