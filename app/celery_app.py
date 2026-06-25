@@ -18,5 +18,9 @@ app.conf.beat_schedule = {
     "run-periodic-analytics-every-30-seconds": {
         "task": "app.tasks.run_periodic_analytics_task",
         "schedule": 30.0
+    },
+    "monitor-database-zones-every-30-seconds": {
+        "task": "app.tasks.monitor_all_zones_task",
+        "schedule": 30.0
     }
 }
