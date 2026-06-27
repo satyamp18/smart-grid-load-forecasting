@@ -6,7 +6,9 @@ from sqlalchemy.orm import Session
 from smartgrid.models.load_report import LoadReport
 from smartgrid.models.meter import SmartMeter
 from smartgrid.models.reading import MeterReading
+import logging
 
+logger = logging.getLogger(__name__)
 
 class LoadService:
 

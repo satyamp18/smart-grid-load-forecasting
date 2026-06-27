@@ -11,14 +11,26 @@ router = APIRouter()
 service = MeterService()
 
 
-@router.get("/meters", response_model=list[MeterResponse])
+@router.get(
+    "/meters",
+    response_model=list[MeterResponse],
+    summary="Get All Meters",
+    description="Returns all smart meters."
+)
 def get_all_meters(db: Session = Depends(get_db)):
     return service.get_all_meters(db)
 
 
-@router.get("/meters/{meter_id}", response_model=MeterResponse)
-def get_meter(meter_id: int, db: Session = Depends(get_db)):
-
+@router.get(
+    "/meters/{meter_id}",
+    response_model=MeterResponse,
+    summary="Get Meter",
+    description="Returns a smart meter by ID."
+)
+def get_meter(
+    meter_id: int,
+    db: Session = Depends(get_db),
+):
     meter = service.get_meter(db, meter_id)
 
     if meter is None:
@@ -30,12 +42,16 @@ def get_meter(meter_id: int, db: Session = Depends(get_db)):
     return meter
 
 
-@router.post("/meters", response_model=MeterResponse)
+@router.post(
+    "/meters",
+    response_model=MeterResponse,
+    summary="Create Meter",
+    description="Creates a new smart meter."
+)
 def create_meter(
     meter: MeterCreate,
     db: Session = Depends(get_db),
 ):
-
     new_meter = SmartMeter(
         meter_code=meter.meter_code,
         zone_id=meter.zone_id,
@@ -44,21 +60,21 @@ def create_meter(
     return service.create_meter(db, new_meter)
 
 
-@router.delete("/meters/{meter_id}")
+@router.delete(
+    "/meters/{meter_id}",
+    summary="Delete Meter",
+    description="Deletes a smart meter."
+)
 def delete_meter(
     meter_id: int,
     db: Session = Depends(get_db),
 ):
-
-    deleted = service.delete_meter(
-        db,
-        meter_id,
-    )
+    deleted = service.delete_meter(db, meter_id)
 
     if deleted is None:
         raise HTTPException(
             status_code=404,
-            detail="Meter not found",
+            detail="Meter not found"
         )
 
     return {

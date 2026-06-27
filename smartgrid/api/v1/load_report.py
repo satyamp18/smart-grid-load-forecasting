@@ -52,6 +52,8 @@ def get_report(
 @router.post(
     "/load-reports",
     response_model=LoadReportResponse,
+    summary="Create Zone",
+    description="Creates a new smart grid zone."
 )
 def create_report(
     report: LoadReportCreate,

@@ -16,6 +16,8 @@ from smartgrid.api.v1.load_report import (
     router as load_report_router,
 )
 import logging
+# from smartgrid.api.v1.dashboard import router as dashboard_router
+
 
 # module logger
 logger = logging.getLogger(__name__)
@@ -66,6 +68,11 @@ app.include_router(
     prefix="/api/v1",
     tags=["Health"]
 )
+# app.include_router(
+#     dashboard_router,
+#     prefix="/api/v1",
+#     tags=["Dashboard"]
+# )
 
 # Root Route
 @app.get("/")
