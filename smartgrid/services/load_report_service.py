@@ -4,6 +4,9 @@ from smartgrid.models.load_report import LoadReport
 from smartgrid.repositories.load_report_repository import (
     LoadReportRepository,
 )
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class LoadReportService:

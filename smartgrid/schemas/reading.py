@@ -1,12 +1,12 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ReadingCreate(BaseModel):
-    meter_id: int
-    voltage: float
-    current: float
+    meter_id: int = Field(..., gt=0)
+    voltage: float = Field(..., gt=0)
+    current: float = Field(..., gt=0)
     timestamp: datetime
 
 

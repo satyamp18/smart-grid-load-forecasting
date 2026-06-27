@@ -2,11 +2,14 @@ from datetime import datetime
 
 from sqlalchemy.orm import Session
 
+
 from smartgrid.models.alert import Alert
 from smartgrid.models.zone import Zone
 from smartgrid.repositories.alert_repository import AlertRepository
 from smartgrid.services.load_service import LoadService
+import logging
 
+logger = logging.getLogger(__name__)
 
 class AlertService:
 

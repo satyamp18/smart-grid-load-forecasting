@@ -48,8 +48,10 @@ def get_reading(
 
 
 @router.post(
-    "/readings",
-    response_model=ReadingResponse,
+    "/zones",
+    response_model=ZoneResponse,
+    summary="Create Zone",
+    description="Creates a new smart grid zone."
 )
 def create_reading(
     reading: ReadingCreate,
