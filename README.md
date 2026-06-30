@@ -98,3 +98,25 @@ You can view the interactive documentation at `http://127.0.0.1:8000/docs`.
     python3 app/analytics.py
     ```
     *(Run twice: the first is a Cache Miss; the second is a Cache Hit, loading directly from Redis).*
+
+*   **Test Asynchronous API Endpoints (FastAPI + Celery):**
+    Ensure the FastAPI application and Celery worker are running, then run:
+    ```bash
+    # Trigger load report calculation asynchronously for Zone 1:
+    curl -X POST http://127.0.0.1:8000/api/v1/load-reports/trigger/1
+
+    # Trigger overload check/alerts asynchronously for Zone 1:
+    curl -X POST http://127.0.0.1:8000/api/v1/alerts/check/1
+    ```
+
+---
+
+## ⚡ Celery Integration & Background Schedules
+
+1. **Dynamic Configuration:** Broker and backend connections are configured dynamically via `REDIS_URL` specified in `.env` (defaulting to local Redis `redis://localhost:6379/0`), parsed via Pydantic `Settings`.
+2. **Circular Dependency Avoidance:** To support clean Python architecture, `LoadService` and `AlertService` perform local imports inside their async methods (`generate_load_report_async` and `check_overload_async`) to dispatch tasks without introducing import loops with `app.tasks`.
+3. **Independent Periodic Schedules (Celery Beat):** Periodic tasks are split into two decoupled processes running every **2 minutes (120 seconds)**:
+   - `generate-load-reports-every-2-minutes`: Executes `generate_load_reports_all_zones_task` to compute and record loads for all registered zones.
+   - `check-alerts-every-2-minutes`: Executes `check_overload_all_zones_task` to run utilization safety margin checks (alerts triggered if >90% capacity).
+4. **Task Isolation:** Worker logs provide clear trace logs indicating whether a zone operates within limit capacity or flags a critical overload alert.
+

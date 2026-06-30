@@ -68,3 +68,27 @@ def create_report(
         db,
         new_report,
     )
+
+
+from smartgrid.services.load_service import LoadService
+
+load_service = LoadService()
+
+
+@router.post(
+    "/load-reports/trigger/{zone_id}",
+    status_code=202,
+)
+def trigger_load_report(
+    zone_id: int,
+):
+    """
+    Triggers an asynchronous load report generation task for a specific zone using Celery.
+    Returns the task ID to track execution status.
+    """
+    task = load_service.generate_load_report_async(zone_id)
+    return {
+        "task_id": task.id,
+        "status": "Task dispatched to Celery worker",
+        "zone_id": zone_id
+    }

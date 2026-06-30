@@ -57,3 +57,22 @@ def delete_alert(
     return {
         "message": "Alert deleted successfully"
     }
+
+
+@router.post(
+    "/alerts/check/{zone_id}",
+    status_code=202,
+)
+def trigger_overload_check(
+    zone_id: int,
+):
+    """
+    Triggers an asynchronous overload check task for a specific zone using Celery.
+    Returns the task ID to track execution status.
+    """
+    task = service.check_overload_async(zone_id)
+    return {
+        "task_id": task.id,
+        "status": "Task dispatched to Celery worker",
+        "zone_id": zone_id
+    }

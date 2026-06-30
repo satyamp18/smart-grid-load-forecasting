@@ -57,3 +57,14 @@ class LoadService:
         db.refresh(report)
 
         return report
+
+    def generate_load_report_async(
+        self,
+        zone_id: int,
+    ):
+        """
+        Dispatches a Celery task to calculate load and generate a report asynchronously.
+        Uses a local import inside the function to prevent circular dependency errors.
+        """
+        from app.tasks import generate_load_report_task
+        return generate_load_report_task.delay(zone_id)

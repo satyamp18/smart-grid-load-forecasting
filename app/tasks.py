@@ -49,17 +49,30 @@ def check_zone_overload_task(zone_id: int):
     finally:
         db.close()
 
-@app.task(name="app.tasks.monitor_all_zones_task")
-def monitor_all_zones_task():
-    logger.info("Periodic cron: Dispatching load report and overload check tasks for all registered zones...")
+@app.task(name="app.tasks.generate_load_reports_all_zones_task")
+def generate_load_reports_all_zones_task():
+    logger.info("Periodic cron: Dispatching load report generation tasks for all registered zones...")
     db = SessionLocal()
     try:
         zones = db.query(Zone).all()
-        logger.info(f"Found {len(zones)} zones in database.")
+        logger.info(f"Found {len(zones)} zones in database for load report generation.")
         for zone in zones:
             generate_load_report_task.delay(zone.id)
+    except Exception as e:
+        logger.error(f"Failed to fetch zones for load report generation: {e}")
+    finally:
+        db.close()
+
+@app.task(name="app.tasks.check_overload_all_zones_task")
+def check_overload_all_zones_task():
+    logger.info("Periodic cron: Dispatching overload check tasks for all registered zones...")
+    db = SessionLocal()
+    try:
+        zones = db.query(Zone).all()
+        logger.info(f"Found {len(zones)} zones in database for overload checks.")
+        for zone in zones:
             check_zone_overload_task.delay(zone.id)
     except Exception as e:
-        logger.error(f"Failed to fetch zones for monitoring: {e}")
+        logger.error(f"Failed to fetch zones for overload checks: {e}")
     finally:
         db.close()

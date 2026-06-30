@@ -70,3 +70,14 @@ class AlertService:
             return self.repo.create(db, alert)
 
         return None
+
+    def check_overload_async(
+        self,
+        zone_id: int,
+    ):
+        """
+        Dispatches a Celery task to check zone overload and trigger alerts asynchronously.
+        Uses a local import inside the function to prevent circular dependency errors.
+        """
+        from app.tasks import check_zone_overload_task
+        return check_zone_overload_task.delay(zone_id)
