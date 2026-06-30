@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual Environment
+venv/
+
+# Environment Variables
+.env
+
+# Mac
+.DS_Store
+
+# Logs
+logfile
+
+# Database
+*.db
+.env
+dashboard.py
+forecast.py
+forecast_graph.py
+graph.py
+main.py
+test_db.py
