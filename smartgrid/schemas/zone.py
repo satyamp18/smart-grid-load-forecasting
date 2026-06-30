@@ -1,15 +1,14 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class ZoneCreate(BaseModel):
-    name: str
-    capacity_kw: float
+    zone_name: str
+    max_capacity_kw: float
 
 
 class ZoneResponse(BaseModel):
-    id: int
-    name: str
-    capacity_kw: float
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        from_attributes = True
+    id: int
+    zone_name: str
+    max_capacity_kw: float
