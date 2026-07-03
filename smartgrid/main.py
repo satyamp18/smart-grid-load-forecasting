@@ -1,82 +1,92 @@
-from smartgrid.services.model import predict_load
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-import sqlite3
+
+import smartgrid.models
+from smartgrid.api.v1.meter import router as meter_router
+from smartgrid.api.v1.reading import router as reading_router
+from smartgrid.api.v1.analytics import router as analytics_router
+from smartgrid.api.v1.alert import router as alert_router
+from smartgrid.api.v1.load_report import router as load_report_router
+from smartgrid.api.v1.zone import router as zone_router
+from smartgrid.api.v1.health import router as health_router
+from smartgrid.core.logging import setup_logging
+from smartgrid.db.base import Base
+from smartgrid.db.session import engine
+import logging
+
+# Logging setup
+setup_logging()
+
+# FastAPI App
 app = FastAPI(
     title="Smart Grid Operations Center",
     version="1.0.0"
 )
 
-# CORS (frontend connect ke liye)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+# Health Routes
+app.include_router(
+    zone_router,
+    prefix="/api/v1",
+    tags=["Zone"]
+)
+app.include_router(
+    meter_router,
+    prefix="/api/v1",
+    tags=["Meter"]
 )
 
-# Request Model (IMPORTANT)
-class ForecastRequest(BaseModel):
-    temperature: float
-    hour: int
+app.include_router(
+    reading_router,
+    prefix="/api/v1",
+    tags=["Reading"]
+)
 
-# Root API
+app.include_router(
+    analytics_router,
+    prefix="/api/v1",
+    tags=["Analytics"]
+)
+
+app.include_router(
+    alert_router,
+    prefix="/api/v1",
+    tags=["Alert"]
+)
+
+app.include_router(
+    load_report_router,
+    prefix="/api/v1",
+    tags=["Load Report"]
+)
+app.include_router(
+    health_router,
+    prefix="/api/v1",
+    tags=["Health"]
+)
+
+# Root Route
 @app.get("/")
-def home():
-    return {"message": "Smart Grid API is running 🚀"}
-
-# Health check API
-@app.get("/health")
-def health():
-    return {"status": "ok"}
-@app.post("/forecast")
-def forecast(req: ForecastRequest):
-    prediction = predict_load(req.temperature, req.hour)
-
-    conn = sqlite3.connect("test.db")
-    cursor = conn.cursor()
-
-    cursor.execute(
-        """
-        INSERT INTO forecasts
-        (temperature, hour, predicted_load)
-        VALUES (?, ?, ?)
-        """,
-        (req.temperature, req.hour, prediction)
-    )
-
-    conn.commit()
-    conn.close()
-
+def root():
     return {
-        "status": "success",
-        "temperature": req.temperature,
-        "hour": req.hour,
-        "predicted_load": round(prediction, 2),
-        "unit": "MW"
+        "message": "Smart Grid API Running"
     }
-# Forecast API
-@app.get("/forecasts")
-def get_forecasts():
-    conn = sqlite3.connect("test.db")
-    cursor = conn.cursor()
 
-    cursor.execute(
-        "SELECT id, temperature, hour, predicted_load FROM forecasts"
-    )
 
-    rows = cursor.fetchall()
+@app.on_event("startup")
+def on_startup():
+    """Attempt to create DB tables on startup, but don't crash the app if DB is unreachable."""
+    # DB initialization can be skipped in development or when DB credentials are
+    # not available. Set SKIP_DB_INIT=true in environment to skip automatically.
+    import os
 
-    conn.close()
+    skip = os.getenv("SKIP_DB_INIT", "true").lower() in ("1", "true", "yes")
+    if skip:
+        logging.getLogger().info("Skipping DB schema creation on startup (SKIP_DB_INIT=%r).", skip)
+        return
 
-    return [
-        {
-            "id": row[0],
-            "temperature": row[1],
-            "hour": row[2],
-            "predicted_load": round(row[3], 2)
-        }
-        for row in rows
-    ]
+    try:
+        logging.getLogger().info("Ensuring database tables exist...")
+        Base.metadata.create_all(bind=engine)
+        logging.getLogger().info("Database tables created/verified.")
+    except Exception as e:
+        # Log the exception but allow the app to start — DB may be temporarily unavailable
+        logging.getLogger().exception("Failed to create/verify database tables on startup: %s", e)
