@@ -105,6 +105,7 @@ The database is managed using PostgreSQL with SQLAlchemy ORM and Alembic migrati
 - View Readings
 - Delete Reading
 
+
 ### Analytics
 
 - Zone-wise Load Analysis
