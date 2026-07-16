@@ -18,7 +18,7 @@ export default function Zones() {
         "http://127.0.0.1:8000/api/v1/zones"
       );
 
-      setZones(res.data.zones || []);
+      setZones(res.data);
     } catch (err) {
       console.log("API Error:", err);
       setZones([]);
