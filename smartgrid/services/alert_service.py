@@ -2,11 +2,21 @@ from datetime import datetime
 
 from sqlalchemy.orm import Session
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> cf97e51a24b5e46d23341cee844332d97990216e
 from smartgrid.models.alert import Alert
 from smartgrid.models.zone import Zone
 from smartgrid.repositories.alert_repository import AlertRepository
 from smartgrid.services.load_service import LoadService
+<<<<<<< HEAD
 
+=======
+import logging
+
+logger = logging.getLogger(__name__)
+>>>>>>> cf97e51a24b5e46d23341cee844332d97990216e
 
 class AlertService:
 

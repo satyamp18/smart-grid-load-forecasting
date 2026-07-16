@@ -3,6 +3,12 @@ from sqlalchemy.orm import Session
 
 from smartgrid.models.meter import SmartMeter
 from smartgrid.models.reading import MeterReading
+<<<<<<< HEAD
+=======
+import logging
+
+logger = logging.getLogger(__name__)
+>>>>>>> cf97e51a24b5e46d23341cee844332d97990216e
 
 
 class AnalyticsService:

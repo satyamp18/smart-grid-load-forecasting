@@ -29,7 +29,16 @@ def get_zone(zone_id: int, db: Session = Depends(get_db)):
     return zone
 
 
+<<<<<<< HEAD
 @router.post("/zones", response_model=ZoneResponse)
+=======
+@router.post(
+    "/zones",
+    response_model=ZoneResponse,
+    summary="Create Zone",
+    description="Creates a new smart grid zone."
+)
+>>>>>>> cf97e51a24b5e46d23341cee844332d97990216e
 def create_zone(
     zone: ZoneCreate,
     db: Session = Depends(get_db),

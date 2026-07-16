@@ -1,6 +1,12 @@
 from sqlalchemy.orm import Session
 from smartgrid.repositories.meter_repository import MeterRepository
+<<<<<<< HEAD
 
+=======
+import logging
+
+logger = logging.getLogger(__name__)
+>>>>>>> cf97e51a24b5e46d23341cee844332d97990216e
 
 class MeterService:
 
