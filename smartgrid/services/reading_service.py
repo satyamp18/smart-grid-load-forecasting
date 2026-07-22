@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session
 
 from smartgrid.models.reading import MeterReading
-from smartgrid.repositories.reading_repository import ReadingRepository
-import logging
+from smartgrid.repositories.reading_repository import (
+    ReadingRepository,
+)
 
-logger = logging.getLogger(__name__)
 
 class ReadingService:
 
@@ -14,16 +14,48 @@ class ReadingService:
     def get_all_readings(self, db: Session):
         return self.repo.get_all(db)
 
-    def get_reading(self, db: Session, reading_id: int):
-        return self.repo.get_by_id(db, reading_id)
+    def get_reading(
+        self,
+        db: Session,
+        reading_id: int,
+    ):
+        return self.repo.get_by_id(
+            db,
+            reading_id,
+        )
 
-    def create_reading(self, db: Session, reading: MeterReading):
-
+    def create_reading(
+        self,
+        db: Session,
+        reading: MeterReading,
+    ):
         reading.power_kw = (
             reading.voltage * reading.current
         ) / 1000
 
-        return self.repo.create(db, reading)
+        return self.repo.create(
+            db,
+            reading,
+        )
 
-    def delete_reading(self, db: Session, reading_id: int):
-        return self.repo.delete(db, reading_id)
+    def update_reading(
+        self,
+        db: Session,
+        reading_id: int,
+        reading_data,
+    ):
+        return self.repo.update(
+            db,
+            reading_id,
+            reading_data,
+        )
+
+    def delete_reading(
+        self,
+        db: Session,
+        reading_id: int,
+    ):
+        return self.repo.delete(
+            db,
+            reading_id,
+        )

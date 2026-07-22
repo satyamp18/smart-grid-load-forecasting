@@ -1,0 +1,24 @@
+.app-layout{
+    display:flex;
+    min-height:100vh;
+    background:#F8FAFC;
+}
+
+.main-content{
+    flex:1;
+    margin-left:260px;   /* Sidebar width */
+    min-height:100vh;
+    background:#F8FAFC;
+}
+
+.page-content{
+    padding:30px;
+    background:#F8FAFC;
+    min-height:calc(100vh - 75px);
+}
+
+@media (max-width:992px){
+    .main-content{
+        margin-left:220px;
+    }
+}

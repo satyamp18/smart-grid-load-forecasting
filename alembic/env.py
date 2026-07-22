@@ -12,21 +12,21 @@ from smartgrid.models.reading import MeterReading
 from smartgrid.models.load_report import LoadReport
 from smartgrid.models.alert import Alert
 
-# from dotenv import load_dotenv
-# import os
+from dotenv import load_dotenv
+import os
 
-# load_dotenv()
+load_dotenv()
 
-# config = context.config
+config = context.config
 
-# config.set_main_option(
-#     "sqlalchemy.url",
-#     os.getenv("DATABASE_URL")
-# )
+config.set_main_option(
+    "sqlalchemy.url",
+    os.getenv("DATABASE_URL")
+)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
-config = context.config
+
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

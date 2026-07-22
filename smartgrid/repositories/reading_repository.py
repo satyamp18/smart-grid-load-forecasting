@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+
 from smartgrid.models.reading import MeterReading
 
 
@@ -18,6 +19,30 @@ class ReadingRepository:
         db.add(reading)
         db.commit()
         db.refresh(reading)
+        return reading
+
+    def update(
+        self,
+        db: Session,
+        reading_id: int,
+        reading_data,
+    ):
+        reading = self.get_by_id(db, reading_id)
+
+        if not reading:
+            return None
+
+        reading.meter_id = reading_data.meter_id
+        reading.voltage = reading_data.voltage
+        reading.current = reading_data.current
+        reading.timestamp = reading_data.timestamp
+        reading.power_kw = (
+            reading.voltage * reading.current
+        ) / 1000
+
+        db.commit()
+        db.refresh(reading)
+
         return reading
 
     def delete(self, db: Session, reading_id: int):

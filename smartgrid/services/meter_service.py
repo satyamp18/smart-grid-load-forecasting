@@ -20,3 +20,6 @@ class MeterService:
 
     def delete_meter(self, db: Session, meter_id: int):
         return self.repo.delete(db, meter_id)
+    
+    def update_meter(self, db: Session, meter_id: int, meter_data):
+        return self.repo.update(db, meter_id, meter_data)

@@ -12,11 +12,13 @@ from smartgrid.api.v1.meter import router as meter_router
 from smartgrid.api.v1.reading import router as reading_router
 from smartgrid.api.v1.analytics import router as analytics_router
 from smartgrid.api.v1.alert import router as alert_router
+from fastapi.middleware.cors import CORSMiddleware
 from smartgrid.api.v1.load_report import (
     router as load_report_router,
 )
 import logging
 from smartgrid.api.v1.dashboard import router as dashboard_router
+from fastapi.middleware.cors import CORSMiddleware
 
 
 # module logger
@@ -73,7 +75,13 @@ app.include_router(
     prefix="/api/v1",
     tags=["Dashboard"]
 )
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # Root Route
 @app.get("/")
 def root():

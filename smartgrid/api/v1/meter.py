@@ -3,8 +3,12 @@ from sqlalchemy.orm import Session
 
 from smartgrid.db.dependencies import get_db
 from smartgrid.models.meter import SmartMeter
-from smartgrid.schemas.meter import MeterCreate, MeterResponse
 from smartgrid.services.meter_service import MeterService
+from smartgrid.schemas.meter import (
+    MeterCreate,
+    MeterUpdate,
+    MeterResponse,
+)
 
 router = APIRouter()
 
@@ -59,6 +63,31 @@ def create_meter(
 
     return service.create_meter(db, new_meter)
 
+
+@router.put(
+    "/meters/{meter_id}",
+    response_model=MeterResponse,
+    summary="Update Meter",
+    description="Updates an existing smart meter."
+)
+def update_meter(
+    meter_id: int,
+    meter: MeterUpdate,
+    db: Session = Depends(get_db),
+):
+    updated = service.update_meter(
+        db,
+        meter_id,
+        meter,
+    )
+
+    if updated is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Meter not found",
+        )
+
+    return updated
 
 @router.delete(
     "/meters/{meter_id}",

@@ -10,6 +10,13 @@ class ReadingCreate(BaseModel):
     timestamp: datetime
 
 
+class ReadingUpdate(BaseModel):
+    meter_id: int = Field(..., gt=0)
+    voltage: float = Field(..., gt=0)
+    current: float = Field(..., gt=0)
+    timestamp: datetime
+
+
 class ReadingResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

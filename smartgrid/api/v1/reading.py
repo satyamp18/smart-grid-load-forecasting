@@ -5,6 +5,7 @@ from smartgrid.db.dependencies import get_db
 from smartgrid.models.reading import MeterReading
 from smartgrid.schemas.reading import (
     ReadingCreate,
+    ReadingUpdate,
     ReadingResponse,
 )
 from smartgrid.services.reading_service import ReadingService
@@ -67,6 +68,30 @@ def create_reading(
         db,
         new_reading,
     )
+
+@router.put(
+    "/readings/{reading_id}",
+    response_model=ReadingResponse,
+)
+def update_reading(
+    reading_id: int,
+    reading: ReadingUpdate,
+    db: Session = Depends(get_db),
+):
+
+    updated = service.update_reading(
+        db,
+        reading_id,
+        reading,
+    )
+
+    if not updated:
+        raise HTTPException(
+            status_code=404,
+            detail="Reading not found",
+        )
+
+    return updated
 
 
 @router.delete("/readings/{reading_id}")

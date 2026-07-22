@@ -32,3 +32,18 @@ class MeterRepository:
         db.commit()
 
         return meter
+    
+    def update(self, db: Session, meter_id: int, meter_data):
+
+       meter = self.get_by_id(db, meter_id)
+
+       if not meter:
+         return None
+
+       meter.meter_code = meter_data.meter_code
+       meter.zone_id = meter_data.zone_id
+
+       db.commit()
+       db.refresh(meter)
+
+       return meter
