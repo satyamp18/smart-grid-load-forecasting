@@ -12,20 +12,10 @@ import {
   FaBolt,
   FaDatabase,
   FaExclamationTriangle,
+  FaCheckCircle,
+  FaChartLine,
+  FaBatteryHalf,
 } from "react-icons/fa";
-const loadData = [
-  { zone: "North", load: 420 },
-  { zone: "South", load: 310 },
-  { zone: "East", load: 520 },
-  { zone: "West", load: 390 },
-];
-
-const meterData = [
-  { name: "North", value: 3 },
-  { name: "South", value: 2 },
-  { name: "East", value: 2 },
-  { name: "West", value: 2 },
-];
 
 function Dashboard() {
   const [dashboard, setDashboard] = useState(null);
@@ -33,6 +23,12 @@ function Dashboard() {
 
   useEffect(() => {
     fetchDashboard();
+
+    const interval = setInterval(() => {
+      fetchDashboard();
+    }, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const fetchDashboard = async () => {
@@ -46,22 +42,37 @@ function Dashboard() {
     }
   };
 
-  if (loading) {
-    return <Loading />;
-  }
+  if (loading) return <Loading />;
 
-  if (!dashboard) {
-    return <h2>No Dashboard Data Found</h2>;
-  }
+  if (!dashboard) return <h2>No Dashboard Data Found</h2>;
+
+  const loadData = [
+    {
+      zone: "Current Load",
+      load: dashboard.total_load_kw,
+    },
+    {
+      zone: "Utilization",
+      load: dashboard.overall_utilization,
+    },
+  ];
+
+  const alertData = [
+    {
+      name: "Active",
+      value: dashboard.active_alerts,
+    },
+    {
+      name: "Resolved",
+      value: dashboard.resolved_alerts,
+    },
+  ];
 
   return (
     <div>
-
-      {/* Welcome Section */}
-
       <div
         style={{
-          background: "white",
+          background: "#fff",
           padding: "25px",
           borderRadius: "18px",
           marginBottom: "25px",
@@ -76,10 +87,7 @@ function Dashboard() {
         </p>
       </div>
 
-      {/* Dashboard Cards */}
-
       <div className="dashboard-grid">
-
         <DashboardCard
           title="Zones"
           value={dashboard.total_zones}
@@ -88,7 +96,7 @@ function Dashboard() {
         />
 
         <DashboardCard
-          title="Meters"
+          title="Smart Meters"
           value={dashboard.total_meters}
           icon={<FaBolt />}
           color="linear-gradient(135deg,#16A34A,#4ADE80)"
@@ -102,28 +110,39 @@ function Dashboard() {
         />
 
         <DashboardCard
-          title="Alerts"
-          value={dashboard.total_alerts}
+          title="Active Alerts"
+          value={dashboard.active_alerts}
           icon={<FaExclamationTriangle />}
           color="linear-gradient(135deg,#DC2626,#FB7185)"
         />
 
         <DashboardCard
+          title="Resolved Alerts"
+          value={dashboard.resolved_alerts}
+          icon={<FaCheckCircle />}
+          color="linear-gradient(135deg,#10B981,#34D399)"
+        />
+
+        <DashboardCard
           title="Total Load"
-          value={`${dashboard.total_load_kw?.toFixed(2)} kW`}
-          icon={<FaBolt />}
+          value={`${dashboard.total_load_kw.toFixed(2)} kW`}
+          icon={<FaBatteryHalf />}
           color="linear-gradient(135deg,#7C3AED,#A855F7)"
         />
 
+        <DashboardCard
+          title="Utilization"
+          value={`${dashboard.overall_utilization}%`}
+          icon={<FaChartLine />}
+          color="linear-gradient(135deg,#F59E0B,#FBBF24)"
+        />
       </div>
-      <div className="chart-grid">
 
+      <div className="chart-grid">
         <LoadBarChart data={loadData} />
 
-        <StatsPieChart data={meterData} />
-
+        <StatsPieChart data={alertData} />
       </div>
-
     </div>
   );
 }

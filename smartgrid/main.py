@@ -1,115 +1,108 @@
+import logging
+
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 import smartgrid.models
 
-from smartgrid.api.v1.zone import router as zone_router
+from smartgrid.api.v1.alert import router as alert_router
+from smartgrid.api.v1.analytics import router as analytics_router
+from smartgrid.api.v1.dashboard import router as dashboard_router
 from smartgrid.api.v1.health import router as health_router
+from smartgrid.api.v1.load_report import router as load_report_router
+from smartgrid.api.v1.meter import router as meter_router
+from smartgrid.api.v1.reading import router as reading_router
+from smartgrid.api.v1.zone import router as zone_router
+from smartgrid.core.config import settings
 from smartgrid.core.logging import setup_logging
 from smartgrid.db.base import Base
 from smartgrid.db.session import engine
-from smartgrid.core.config import settings
-from smartgrid.api.v1.meter import router as meter_router
-from smartgrid.api.v1.reading import router as reading_router
-from smartgrid.api.v1.analytics import router as analytics_router
-from smartgrid.api.v1.alert import router as alert_router
-from fastapi.middleware.cors import CORSMiddleware
-from smartgrid.api.v1.load_report import (
-    router as load_report_router,
-)
-import logging
-from smartgrid.api.v1.dashboard import router as dashboard_router
-from fastapi.middleware.cors import CORSMiddleware
+from smartgrid.websocket.alert_socket import router as websocket_router
 
-
-# module logger
-logger = logging.getLogger(__name__)
-
-# Logging setup
 setup_logging()
 
-# FastAPI App
+logger = logging.getLogger(__name__)
+
 app = FastAPI(
     title="Smart Grid Operations Center",
-    version="1.0.0"
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
 )
 
-# Health Routes
-app.include_router(
-    zone_router,
-    prefix="/api/v1",
-    tags=["Zone"]
-)
+# -------------------------------
+# CORS
+# -------------------------------
 
-app.include_router(
-    meter_router,
-    prefix="/api/v1",
-    tags=["Meter"]
-)
-app.include_router(
-    reading_router,
-    prefix="/api/v1",
-    tags=["Reading"],
-)
-app.include_router(
-    analytics_router,
-    prefix="/api/v1",
-    tags=["Analytics"],
-)
-app.include_router(
-    alert_router,
-    prefix="/api/v1",
-    tags=["Alert"],
-)
-app.include_router(
-    load_report_router,
-    prefix="/api/v1",
-    tags=["Load Report"],
-)
-app.include_router(
-    health_router,
-    prefix="/api/v1",
-    tags=["Health"]
-)
-app.include_router(
-    dashboard_router,
-    prefix="/api/v1",
-    tags=["Dashboard"]
-)
+origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
+frontend_url = getattr(settings, "FRONTEND_URL", None)
+
+if frontend_url:
+    origins.append(frontend_url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# Root Route
+
+# -------------------------------
+# API Routers
+# -------------------------------
+
+app.include_router(zone_router, prefix="/api/v1", tags=["Zone"])
+app.include_router(meter_router, prefix="/api/v1", tags=["Meter"])
+app.include_router(reading_router, prefix="/api/v1", tags=["Reading"])
+app.include_router(analytics_router, prefix="/api/v1", tags=["Analytics"])
+app.include_router(alert_router, prefix="/api/v1", tags=["Alert"])
+app.include_router(load_report_router, prefix="/api/v1", tags=["Load Report"])
+app.include_router(health_router, prefix="/api/v1", tags=["Health"])
+app.include_router(dashboard_router, prefix="/api/v1", tags=["Dashboard"])
+
+# WebSocket
+app.include_router(websocket_router)
+
+# -------------------------------
+# Root
+# -------------------------------
+
 @app.get("/")
 def root():
     return {
-        "message": "Smart Grid API Running"
+        "message": "Smart Grid API Running",
+        "version": "1.0.0",
+        "docs": "/docs",
     }
 
 
+# -------------------------------
+# Startup
+# -------------------------------
+
 @app.on_event("startup")
-async def on_startup():
-    """Attempt to create DB tables on startup, but don't crash the app if DB is unreachable."""
-    # DB initialization can be skipped in development or when DB credentials are
-    # not available. Set SKIP_DB_INIT=true in environment to skip automatically.
+async def startup():
+
     import os
-    # Prefer an explicit setting if provided by pydantic settings, else fallback to env var
-    if hasattr(settings, "SKIP_DB_INIT"):
-        skip = bool(getattr(settings, "SKIP_DB_INIT"))
-    else:
-        skip = os.getenv("SKIP_DB_INIT", "true").lower() in ("1", "true", "yes")
+
+    skip = (
+        getattr(settings, "SKIP_DB_INIT", False)
+        or os.getenv("SKIP_DB_INIT", "false").lower()
+        in ("1", "true", "yes")
+    )
 
     if skip:
-        logger.info("Skipping DB schema creation on startup (SKIP_DB_INIT=%r).", skip)
+        logger.info("Skipping database initialization.")
         return
 
     try:
-        logger.info("Ensuring database tables exist...")
+        logger.info("Checking database schema...")
         Base.metadata.create_all(bind=engine)
-        logger.info("Database tables created/verified.")
-    except Exception as e:
-        # Log the exception but allow the app to start — DB may be temporarily unavailable
-        logger.exception("Failed to create/verify database tables on startup: %s", e)
+        logger.info("Database ready.")
+    except Exception:
+        logger.exception("Database initialization failed.")

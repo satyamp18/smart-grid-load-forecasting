@@ -5,7 +5,8 @@ import {
     FaBolt,
     FaDatabase,
     FaChartLine,
-    FaFileAlt
+    FaFileAlt,
+    FaExclamationTriangle
 } from "react-icons/fa";
 
 import "../assets/styles/sidebar.css";
@@ -52,6 +53,11 @@ function Sidebar() {
                 <NavLink to="/reports">
                     <FaFileAlt />
                     <span>Reports</span>
+                </NavLink>
+                
+                <NavLink to="/alerts">
+                    <FaExclamationTriangle />
+                    <span>Alerts</span>
                 </NavLink>
 
             </nav>

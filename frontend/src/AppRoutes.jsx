@@ -9,6 +9,7 @@ import Readings from "./pages/Readings";
 import Analytics from "./pages/Analytics";
 import Reports from "./pages/Reports";
 import NotFound from "./pages/NotFound";
+import Alerts from "./pages/Alerts";
 
 
 function AppRoutes() {
@@ -22,6 +23,7 @@ function AppRoutes() {
           <Route path="/readings" element={<Readings />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/reports" element={<Reports />} />
+          <Route path="/alerts" element={<Alerts />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

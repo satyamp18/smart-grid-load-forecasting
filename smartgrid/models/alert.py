@@ -24,7 +24,15 @@ class Alert(Base):
     nullable=False
     )
 
+    status = Column(
+    String,
+    nullable=False,
+    default="ACTIVE"
+    )
+
     created_at = Column(
     DateTime,
     nullable=False
     )
+
+    
