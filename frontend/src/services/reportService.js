@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API = "http://localhost:8000/api/v1/load-reports";
+const API =
+`${import.meta.env.VITE_API_URL}/load-reports`;
 
 export const getReports = async () => {
   const res = await axios.get(API);

@@ -34,6 +34,9 @@ function Dashboard() {
   const fetchDashboard = async () => {
     try {
       const response = await api.get("/dashboard/summary");
+
+      console.log("Dashboard Response:", response.data);
+
       setDashboard(response.data);
     } catch (error) {
       console.error("Dashboard API Error:", error);
@@ -49,11 +52,11 @@ function Dashboard() {
   const loadData = [
     {
       zone: "Current Load",
-      load: dashboard.total_load_kw,
+      load: Number(dashboard.total_load_kw),
     },
     {
       zone: "Utilization",
-      load: dashboard.overall_utilization,
+      load: Number(dashboard.overall_utilization),
     },
   ];
 
@@ -125,14 +128,14 @@ function Dashboard() {
 
         <DashboardCard
           title="Total Load"
-          value={`${dashboard.total_load_kw.toFixed(2)} kW`}
+          value={`${Number(dashboard.total_load_kw).toFixed(2)} kW`}
           icon={<FaBatteryHalf />}
           color="linear-gradient(135deg,#7C3AED,#A855F7)"
         />
 
         <DashboardCard
           title="Utilization"
-          value={`${dashboard.overall_utilization}%`}
+          value={`${Number(dashboard.overall_utilization).toFixed(2)}%`}
           icon={<FaChartLine />}
           color="linear-gradient(135deg,#F59E0B,#FBBF24)"
         />
@@ -140,7 +143,6 @@ function Dashboard() {
 
       <div className="chart-grid">
         <LoadBarChart data={loadData} />
-
         <StatsPieChart data={alertData} />
       </div>
     </div>

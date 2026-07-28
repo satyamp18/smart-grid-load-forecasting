@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8000/api/v1/analytics";
+const API_URL =
+`${import.meta.env.VITE_API_URL}/analytics`;
 
 export const getCurrentLoad = async (zoneId) => {
   const { data } = await axios.get(
