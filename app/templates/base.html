@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Smart Grid Operations Center{% endblock %}</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+    <!-- Custom CSS Styles -->
+    <link rel="stylesheet" href="/static/css/globals.css">
+    <link rel="stylesheet" href="/static/css/layout.css">
+    <link rel="stylesheet" href="/static/css/sidebar.css">
+    <link rel="stylesheet" href="/static/css/navbar.css">
+    <link rel="stylesheet" href="/static/css/cards.css">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                ⚡ Smart Grid
+            </div>
+            <nav>
+                <a href="/">
+                    <i class="fa-solid fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/zones">
+                    <i class="fa-solid fa-map-marked-alt"></i>
+                    <span>Zones</span>
+                </a>
+                <a href="/meters">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>Smart Meters</span>
+                </a>
+                <a href="/readings">
+                    <i class="fa-solid fa-database"></i>
+                    <span>Readings</span>
+                </a>
+                <a href="/analytics">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="/reports">
+                    <i class="fa-solid fa-file-alt"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="/alerts">
+                    <i class="fa-solid fa-exclamation-triangle"></i>
+                    <span>Alerts</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="main-content">
+            <!-- Navbar -->
+            <header class="navbar">
+                <div class="nav-left">
+                    <h2>⚡ Smart Grid Monitoring System</h2>
+                    <p>Real-time Monitoring Dashboard</p>
+                </div>
+                <div class="nav-right">
+                    <i class="fa-solid fa-bell icon"></i>
+                    <div class="profile">
+                        <i class="fa-solid fa-circle-user"></i>
+                        <span>Admin</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="page-content">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Toastify JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <!-- Common JavaScript -->
+    <script src="/static/js/common.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

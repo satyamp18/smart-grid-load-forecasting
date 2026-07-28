@@ -1,7 +1,9 @@
 import logging
 
+from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 import smartgrid.models
 
@@ -13,6 +15,7 @@ from smartgrid.api.v1.load_report import router as load_report_router
 from smartgrid.api.v1.meter import router as meter_router
 from smartgrid.api.v1.reading import router as reading_router
 from smartgrid.api.v1.zone import router as zone_router
+from smartgrid.api.v1.views import router as views_router
 from smartgrid.core.config import settings
 from smartgrid.core.logging import setup_logging
 from smartgrid.db.base import Base
@@ -29,6 +32,13 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
 )
+
+# -------------------------------
+# Static Files & Template Views
+# -------------------------------
+
+STATIC_DIR = Path(__file__).resolve().parent.parent / "app" / "static"
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 import os
 
@@ -66,20 +76,11 @@ app.include_router(load_report_router, prefix="/api/v1", tags=["Load Report"])
 app.include_router(health_router, prefix="/api/v1", tags=["Health"])
 app.include_router(dashboard_router, prefix="/api/v1", tags=["Dashboard"])
 
+# Template View Routers (/, /zones, /meters, /readings, /analytics, /reports, /alerts)
+app.include_router(views_router)
+
 # WebSocket
 app.include_router(websocket_router)
-
-# -------------------------------
-# Root
-# -------------------------------
-
-@app.get("/")
-def root():
-    return {
-        "message": "Smart Grid API Running",
-        "version": "1.0.0",
-        "docs": "/docs",
-    }
 
 
 # -------------------------------

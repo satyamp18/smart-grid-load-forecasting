@@ -1,0 +1,87 @@
+/* ===========================
+   Navbar
+=========================== */
+
+.navbar{
+    height:75px;
+    background:#FFFFFF;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 30px;
+    border-bottom:1px solid #E2E8F0;
+    box-shadow:0 4px 12px rgba(15,23,42,.05);
+    position:sticky;
+    top:0;
+    z-index:999;
+}
+
+/* ===========================
+   Left Section
+=========================== */
+
+.nav-left h2{
+    font-size:24px;
+    font-weight:700;
+    color:#0F172A;
+}
+
+.nav-left p{
+    margin-top:4px;
+    font-size:14px;
+    color:#64748B;
+}
+
+/* ===========================
+   Right Section
+=========================== */
+
+.nav-right{
+    display:flex;
+    align-items:center;
+    gap:22px;
+}
+
+/* Notification Icon */
+
+.icon{
+    font-size:22px;
+    color:#2563EB;
+    cursor:pointer;
+    transition:.25s ease;
+}
+
+.icon:hover{
+    color:#1D4ED8;
+    transform:scale(1.08);
+}
+
+/* ===========================
+   Profile
+=========================== */
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:8px 14px;
+    border-radius:12px;
+    background:#F8FAFC;
+    transition:.25s ease;
+}
+
+.profile:hover{
+    background:#EEF2FF;
+}
+
+.profile i,
+.profile svg{
+    font-size:34px;
+    color:#2563EB;
+}
+
+.profile span{
+    font-size:15px;
+    font-weight:600;
+    color:#0F172A;
+}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Grid Zones | Smart Grid Operations Center{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/zones.css">
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-title">
+        <h1>Grid Zones</h1>
+        <p>Manage all smart grid zones.</p>
+    </div>
+    <button class="primary-btn" onclick="openModal()">+ Add Zone</button>
+</div>
+
+<div class="table-toolbar">
+    <input class="search-box" id="search-box" type="text" placeholder="🔍 Search Zone...">
+</div>
+
+<div class="table-card">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Zone Name</th>
+                <th>Capacity</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="zones-tbody">
+            <tr>
+                <td colspan="5" class="empty-row">Loading zones...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Form -->
+<div class="modal-overlay" id="zone-modal" style="display: none;">
+    <div class="modal">
+        <h2 id="modal-title">Add Zone</h2>
+        <form id="zone-form">
+            <input type="text" id="zone_name" placeholder="Zone Name" required />
+            <input type="number" id="max_capacity_kw" placeholder="Maximum Capacity (KW)" required />
+            <div class="modal-actions">
+                <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="primary-btn" id="submit-btn">Add Zone</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/zones.js"></script>
+{% endblock %}

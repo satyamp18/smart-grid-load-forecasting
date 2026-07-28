@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Smart Meters | Smart Grid Operations Center{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/meters.css">
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-title">
+        <h1>Smart Meters</h1>
+        <p>Manage all smart meters in your grid.</p>
+    </div>
+    <button class="primary-btn" onclick="openModal()">+ Add Smart Meter</button>
+</div>
+
+<div class="table-toolbar">
+    <input class="search-box" id="search-box" type="text" placeholder="🔍 Search Meter...">
+</div>
+
+<div class="table-card">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Meter Code</th>
+                <th>Zone</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="meters-tbody">
+            <tr>
+                <td colspan="5" class="empty-row">Loading meters...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Form -->
+<div class="modal-overlay" id="meter-modal" style="display: none;">
+    <div class="modal">
+        <h2 id="modal-title">Add Smart Meter</h2>
+        <form id="meter-form">
+            <input type="text" id="meter_code" placeholder="Enter Meter Code" required />
+            <select id="zone_id" required>
+                <option value="">Select Zone</option>
+            </select>
+            <div class="modal-actions">
+                <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="primary-btn" id="submit-btn">Add Meter</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/meters.js"></script>
+{% endblock %}

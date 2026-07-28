@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Meter Readings | Smart Grid Operations Center{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/readings.css">
+{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <div>
+            <h2>Meter Readings</h2>
+            <p>Manage smart grid meter readings.</p>
+        </div>
+        <button class="primary-btn" onclick="openModal()">+ Add Reading</button>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3 id="total-readings-count">0</h3>
+            <span>Total Readings</span>
+        </div>
+        <div class="stat-card">
+            <h3 id="total-kw-val">0.00</h3>
+            <span>Total kW</span>
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="table-card">
+        <div class="table-toolbar">
+            <input type="text" id="search-box" placeholder="Search by Meter ID..." />
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Meter</th>
+                    <th>Voltage</th>
+                    <th>Current</th>
+                    <th>Power</th>
+                    <th>Timestamp</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="readings-tbody">
+                <tr>
+                    <td colspan="7" class="loading">Loading readings...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal Form -->
+    <div class="modal-overlay" id="reading-modal" style="display: none;">
+        <div class="modal">
+            <h2 id="modal-title">Add Reading</h2>
+            <form id="reading-form">
+                <label for="meter_id">Meter ID</label>
+                <input type="number" id="meter_id" required />
+
+                <label for="voltage">Voltage (V)</label>
+                <input type="number" step="0.01" id="voltage" required />
+
+                <label for="current">Current (A)</label>
+                <input type="number" step="0.01" id="current" required />
+
+                <label for="power_preview">Power (kW)</label>
+                <input id="power_preview" value="0.00" disabled />
+
+                <label for="timestamp">Timestamp</label>
+                <input type="datetime-local" id="timestamp" required />
+
+                <div class="modal-actions">
+                    <button type="submit" class="primary-btn" id="submit-btn">Save</button>
+                    <button type="button" class="secondary-btn" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/readings.js"></script>
+{% endblock %}

@@ -1,0 +1,270 @@
+/* ===========================
+   Readings Page
+=========================== */
+
+.page-container {
+  padding: 24px;
+  width: 100%;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-header h2 {
+  margin: 0;
+  font-size: 28px;
+  color: #1f2937;
+}
+
+.page-header p {
+  margin-top: 6px;
+  color: #6b7280;
+}
+
+/* ===========================
+   Buttons
+=========================== */
+
+.primary-btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 11px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: .25s;
+}
+
+.primary-btn:hover {
+  background: #1d4ed8;
+}
+
+.secondary-btn {
+  background: #e5e7eb;
+  border: none;
+  padding: 11px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.secondary-btn:hover {
+  background: #d1d5db;
+}
+
+.edit-btn,
+.delete-btn {
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 7px 12px;
+  color: white;
+  margin-right: 8px;
+}
+
+.edit-btn {
+  background: #0ea5e9;
+}
+
+.edit-btn:hover {
+  background: #0284c7;
+}
+
+.delete-btn {
+  background: #ef4444;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+}
+
+/* ===========================
+   Stats Cards
+=========================== */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: white;
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.08);
+}
+
+.stat-card h3 {
+  font-size: 32px;
+  color: #2563eb;
+  margin-bottom: 8px;
+}
+
+.stat-card span {
+  color: #6b7280;
+}
+
+/* ===========================
+   Table
+=========================== */
+
+.table-card {
+  background: white;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.08);
+}
+
+.table-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 18px;
+}
+
+.table-toolbar input {
+  width: 320px;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}
+
+.table-toolbar input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table thead {
+  background: #2563eb;
+  color: white;
+}
+
+.data-table th,
+.data-table td {
+  padding: 14px;
+  text-align: center;
+}
+
+.data-table tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.data-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+/* ===========================
+   Modal
+=========================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  width: 520px;
+  background: white;
+  border-radius: 14px;
+  padding: 24px;
+  animation: popup .25s ease;
+}
+
+@keyframes popup {
+  from {
+    transform: scale(.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal h2 {
+  margin-bottom: 18px;
+}
+
+.modal label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.modal input,
+.modal select {
+  width: 100%;
+  padding: 11px;
+  margin-bottom: 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}
+
+.modal input:focus,
+.modal select:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+/* ===========================
+   States
+=========================== */
+
+.loading,
+.empty-state {
+  padding: 45px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 17px;
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .table-toolbar {
+    justify-content: stretch;
+  }
+
+  .table-toolbar input {
+    width: 100%;
+  }
+
+  .modal {
+    width: 95%;
+  }
+
+  .data-table {
+    display: block;
+    overflow-x: auto;
+  }
+}

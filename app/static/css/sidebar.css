@@ -1,0 +1,107 @@
+/* ===========================
+   Sidebar
+=========================== */
+
+.sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:260px;
+    height:100vh;
+    background:#0F172A;
+    color:#FFFFFF;
+    display:flex;
+    flex-direction:column;
+    box-shadow:4px 0 20px rgba(15,23,42,.15);
+    z-index:1000;
+}
+
+/* ===========================
+   Logo
+=========================== */
+
+.logo{
+    height:80px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:24px;
+    font-weight:700;
+    letter-spacing:.5px;
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+/* ===========================
+   Navigation
+=========================== */
+
+.sidebar nav{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    padding:24px 14px;
+    overflow-y:auto;
+}
+
+/* Scrollbar */
+
+.sidebar nav::-webkit-scrollbar{
+    width:6px;
+}
+
+.sidebar nav::-webkit-scrollbar-thumb{
+    background:#334155;
+    border-radius:10px;
+}
+
+/* ===========================
+   Links
+=========================== */
+
+.sidebar nav a{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:14px 16px;
+    border-radius:12px;
+    color:#CBD5E1;
+    font-size:15px;
+    font-weight:500;
+    transition:all .25s ease;
+}
+
+/* Icons */
+
+.sidebar nav a i,
+.sidebar nav a svg{
+    font-size:18px;
+    min-width:18px;
+}
+
+/* Hover */
+
+.sidebar nav a:hover{
+    background:#1E293B;
+    color:#FFFFFF;
+    transform:translateX(4px);
+}
+
+/* Active */
+
+.sidebar nav a.active{
+    background:linear-gradient(90deg,#2563EB,#3B82F6);
+    color:#FFFFFF;
+    font-weight:600;
+    box-shadow:0 8px 18px rgba(37,99,235,.35);
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media(max-width:992px){
+    .sidebar{
+        width:220px;
+    }
+}

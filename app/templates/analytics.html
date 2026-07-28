@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics | Smart Grid Operations Center{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/analytics.css">
+{% endblock %}
+
+{% block content %}
+<div class="analytics-page">
+    <div class="analytics-header">
+        <div>
+            <h2>Analytics Dashboard</h2>
+            <p>Monitor smart grid power analytics.</p>
+        </div>
+        <select id="zone-select">
+            <option value="1">Zone 1</option>
+            <option value="2">Zone 2</option>
+            <option value="3">Zone 3</option>
+        </select>
+    </div>
+
+    <!-- Cards Grid -->
+    <div class="analytics-cards">
+        <div class="analytics-card">
+            <h3 id="current-load-val">0.00</h3>
+            <span>Current Load (kW)</span>
+        </div>
+        <div class="analytics-card">
+            <h3 id="peak-load-val">0.00</h3>
+            <span>Peak Load (kW)</span>
+        </div>
+        <div class="analytics-card">
+            <h3 id="avg-load-val">0.00</h3>
+            <span>Average Load (kW)</span>
+        </div>
+        <div class="analytics-card">
+            <h3 id="history-count">0</h3>
+            <span>Total Readings</span>
+        </div>
+    </div>
+
+    <!-- Line Chart -->
+    <div class="chart-card">
+        <h3>Power Trend</h3>
+        <div style="position: relative; height: 350px; width: 100%;">
+            <canvas id="powerLineChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Recent Readings Table -->
+    <div class="table-card">
+        <h3>Recent Readings</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Meter</th>
+                    <th>Voltage</th>
+                    <th>Current</th>
+                    <th>Power</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody id="analytics-tbody">
+                <tr>
+                    <td colspan="5">Loading analytics history...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/analytics.js"></script>
+{% endblock %}

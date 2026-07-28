@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Alert Management | Smart Grid Operations Center{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/alerts.css">
+{% endblock %}
+
+{% block content %}
+<div class="alerts-page">
+    <div class="alerts-header">
+        <div>
+            <h1>Alert Management</h1>
+            <p>Monitor grid alerts in real time.</p>
+        </div>
+        <button class="refresh-btn" id="refresh-btn">Refresh</button>
+    </div>
+
+    <!-- Alert Cards -->
+    <div class="alert-cards">
+        <div class="card">
+            <h3>Total Alerts</h3>
+            <h2 id="total-alerts">0</h2>
+        </div>
+        <div class="card">
+            <h3>Critical</h3>
+            <h2 id="critical-alerts">0</h2>
+        </div>
+        <div class="card">
+            <h3>Active</h3>
+            <h2 id="active-alerts">0</h2>
+        </div>
+        <div class="card">
+            <h3>Resolved</h3>
+            <h2 id="resolved-alerts">0</h2>
+        </div>
+    </div>
+
+    <!-- Toolbar Filters -->
+    <div class="toolbar">
+        <input type="text" id="search-box" placeholder="Search alert..." />
+
+        <select id="severity-filter">
+            <option value="ALL">All Severity</option>
+            <option value="LOW">LOW</option>
+            <option value="MEDIUM">MEDIUM</option>
+            <option value="HIGH">HIGH</option>
+            <option value="CRITICAL">CRITICAL</option>
+        </select>
+
+        <select id="status-filter">
+            <option value="ALL">All Status</option>
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="RESOLVED">RESOLVED</option>
+        </select>
+    </div>
+
+    <!-- Dynamic Alerts Content -->
+    <div id="table-content-container">
+        <div class="loading">
+            <h2>Loading Alerts...</h2>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/alerts.js"></script>
+{% endblock %}

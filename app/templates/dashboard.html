@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Smart Grid Operations Center{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/dashboard.css">
+{% endblock %}
+
+{% block content %}
+<div>
+    <div style="background: #fff; padding: 25px; border-radius: 18px; margin-bottom: 25px; box-shadow: 0 8px 20px rgba(0,0,0,.08);">
+        <h1 style="color: #0F172A; font-size: 28px; font-weight: 700;">Welcome Admin 👋</h1>
+        <p style="color: #64748B; margin-top: 6px;">Monitor Smart Grid performance, zones, meters and energy usage in real time.</p>
+    </div>
+
+    <!-- Summary Cards Grid -->
+    <div class="dashboard-grid">
+        <div class="dashboard-card">
+            <div class="card-left">
+                <h4>Zones</h4>
+                <h2 id="total-zones">0</h2>
+            </div>
+            <div class="card-icon" style="background: linear-gradient(135deg,#2563EB,#60A5FA);">
+                <i class="fa-solid fa-map-marked-alt"></i>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-left">
+                <h4>Smart Meters</h4>
+                <h2 id="total-meters">0</h2>
+            </div>
+            <div class="card-icon" style="background: linear-gradient(135deg,#16A34A,#4ADE80);">
+                <i class="fa-solid fa-bolt"></i>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-left">
+                <h4>Readings</h4>
+                <h2 id="total-readings">0</h2>
+            </div>
+            <div class="card-icon" style="background: linear-gradient(135deg,#9333EA,#C084FC);">
+                <i class="fa-solid fa-database"></i>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-left">
+                <h4>Active Alerts</h4>
+                <h2 id="active-alerts">0</h2>
+            </div>
+            <div class="card-icon" style="background: linear-gradient(135deg,#DC2626,#FB7185);">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-left">
+                <h4>Resolved Alerts</h4>
+                <h2 id="resolved-alerts">0</h2>
+            </div>
+            <div class="card-icon" style="background: linear-gradient(135deg,#10B981,#34D399);">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-left">
+                <h4>Total Load</h4>
+                <h2 id="total-load">0.00 kW</h2>
+            </div>
+            <div class="card-icon" style="background: linear-gradient(135deg,#7C3AED,#A855F7);">
+                <i class="fa-solid fa-battery-half"></i>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-left">
+                <h4>Utilization</h4>
+                <h2 id="utilization">0.00%</h2>
+            </div>
+            <div class="card-icon" style="background: linear-gradient(135deg,#F59E0B,#FBBF24);">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Grid -->
+    <div class="chart-grid">
+        <div class="chart-card">
+            <h3>Zone Load Distribution</h3>
+            <div style="position: relative; height: 320px; width: 100%;">
+                <canvas id="loadBarChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h3>Alert Distribution</h3>
+            <div style="position: relative; height: 320px; width: 100%;">
+                <canvas id="statsPieChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/dashboard.js"></script>
+{% endblock %}

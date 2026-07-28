@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Load Reports | Smart Grid Operations Center{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/reports.css">
+{% endblock %}
+
+{% block content %}
+<div class="reports-page">
+    <div class="reports-header">
+        <h2>Load Reports</h2>
+        <button id="refresh-btn">Refresh</button>
+    </div>
+
+    <div class="summary-card">
+        <h3>Total Reports</h3>
+        <span id="total-reports-count">0</span>
+    </div>
+
+    <!-- Form -->
+    <form class="report-form" id="report-form">
+        <input type="number" id="zone_id" placeholder="Zone ID" required />
+        <input type="number" step="0.01" id="total_load_kw" placeholder="Total Load (kW)" required />
+        <input type="datetime-local" id="report_time" required />
+        <button type="submit">Generate Report</button>
+    </form>
+
+    <!-- Table Container -->
+    <div class="table-container" id="reports-table-container">
+        <p style="padding: 40px; text-align: center; color: #64748b;">Loading Reports...</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/reports.js"></script>
+{% endblock %}
