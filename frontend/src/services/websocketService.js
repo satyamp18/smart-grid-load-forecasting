@@ -17,8 +17,14 @@ class WebSocketService {
             return;
         }
 
+        const WS_URL =
+        import.meta.env.VITE_API_URL
+        .replace("/api/v1", "")
+        .replace("https://", "wss://")
+        .replace("http://", "ws://");
+
         this.socket = new WebSocket(
-            "ws://127.0.0.1:8000/ws/alerts"
+        `${WS_URL}/ws/alerts`
         );
 
         this.socket.onopen = () => {
