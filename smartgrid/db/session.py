@@ -3,10 +3,14 @@ from sqlalchemy.orm import sessionmaker
 
 from smartgrid.core.config import settings
 
-print("DATABASE_URL =", settings.DATABASE_URL)
+db_url = settings.DATABASE_URL
+if db_url and db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+print("DATABASE_URL =", db_url)
 
 engine = create_engine(
-    settings.DATABASE_URL,
+    db_url,
     echo=True
 )
 

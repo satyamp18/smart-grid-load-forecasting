@@ -17,11 +17,11 @@ class WebSocketService {
             return;
         }
 
-        const WS_URL =
-        import.meta.env.VITE_API_URL
-        .replace("/api/v1", "")
-        .replace("https://", "wss://")
-        .replace("http://", "ws://");
+        const apiUrl = import.meta.env.VITE_API_URL || (window.location.protocol === "https:" ? `https://${window.location.host}/api/v1` : `http://${window.location.host}/api/v1`);
+        const WS_URL = apiUrl
+          .replace(/\/api\/v1\/?$/, "")
+          .replace(/^https:\/\//, "wss://")
+          .replace(/^http:\/\//, "ws://");
 
         this.socket = new WebSocket(
         `${WS_URL}/ws/alerts`
