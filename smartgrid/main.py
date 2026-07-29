@@ -1,6 +1,8 @@
 import logging
-
+import os
+from contextlib import asynccontextmanager
 from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -26,11 +28,33 @@ setup_logging()
 
 logger = logging.getLogger(__name__)
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    skip = (
+        getattr(settings, "SKIP_DB_INIT", False)
+        or os.getenv("SKIP_DB_INIT", "false").lower()
+        in ("1", "true", "yes")
+    )
+
+    if skip:
+        logger.info("Skipping database initialization.")
+    else:
+        try:
+            logger.info("Checking database schema...")
+            Base.metadata.create_all(bind=engine)
+            logger.info("Database ready.")
+        except Exception:
+            logger.exception("Database initialization failed.")
+    yield
+
+
 app = FastAPI(
     title="Smart Grid Operations Center",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
 
 # -------------------------------
@@ -38,9 +62,10 @@ app = FastAPI(
 # -------------------------------
 
 STATIC_DIR = Path(__file__).resolve().parent.parent / "app" / "static"
-app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
-
-import os
+if STATIC_DIR.exists():
+    app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+else:
+    logger.warning("Static directory does not exist: %s", STATIC_DIR)
 
 # -------------------------------
 # CORS
@@ -81,30 +106,3 @@ app.include_router(views_router)
 
 # WebSocket
 app.include_router(websocket_router)
-
-
-# -------------------------------
-# Startup
-# -------------------------------
-
-@app.on_event("startup")
-async def startup():
-
-    import os
-
-    skip = (
-        getattr(settings, "SKIP_DB_INIT", False)
-        or os.getenv("SKIP_DB_INIT", "false").lower()
-        in ("1", "true", "yes")
-    )
-
-    if skip:
-        logger.info("Skipping database initialization.")
-        return
-
-    try:
-        logger.info("Checking database schema...")
-        Base.metadata.create_all(bind=engine)
-        logger.info("Database ready.")
-    except Exception:
-        logger.exception("Database initialization failed.")

@@ -4,10 +4,10 @@ services:
     runtime: python
 
     buildCommand: |
-      pip install -r requirements.txt
+      pip install --no-cache-dir -r requirements.txt
 
     startCommand: |
-      uvicorn smartgrid.main:app --host 0.0.0.0 --port $PORT
+      uvicorn smartgrid.main:app --host 0.0.0.0 --port ${PORT:-10000}
 
     envVars:
       - key: PYTHON_VERSION
