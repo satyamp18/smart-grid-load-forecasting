@@ -1,6 +1,7 @@
 import logging
 import os
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -21,12 +22,90 @@ from smartgrid.api.v1.views import router as views_router
 from smartgrid.core.config import settings
 from smartgrid.core.logging import setup_logging
 from smartgrid.db.base import Base
-from smartgrid.db.session import engine
+from smartgrid.db.session import engine, SessionLocal
+from smartgrid.models.alert import Alert
+from smartgrid.models.load_report import LoadReport
+from smartgrid.models.meter import SmartMeter
+from smartgrid.models.reading import MeterReading
+from smartgrid.models.zone import Zone
 from smartgrid.websocket.alert_socket import router as websocket_router
 
 setup_logging()
 
 logger = logging.getLogger(__name__)
+
+
+# -------------------------------
+# Automatic Initial Seed Function
+# -------------------------------
+def seed_initial_data():
+    """Seed initial sample data (10 records per module) if the database is empty."""
+    db = SessionLocal()
+    try:
+        if db.query(Zone).count() == 0:
+            logger.info("Database is empty. Seeding initial 10 records for all modules...")
+
+            # 1. Seed 10 Zones
+            zones = []
+            for i in range(1, 11):
+                z = Zone(zone_name=f"Zone-{100+i}", max_capacity_kw=500.0 + (i * 50))
+                db.add(z)
+                zones.append(z)
+            db.commit()
+
+            # 2. Seed 10 Smart Meters
+            meters = []
+            for i in range(1, 11):
+                m = SmartMeter(meter_code=f"MTR-100{i}", zone_id=zones[(i - 1) % 10].id)
+                db.add(m)
+                meters.append(m)
+            db.commit()
+
+            # 3. Seed 10 Meter Readings
+            for i in range(1, 11):
+                voltage = 230.0 + (i % 5)
+                current = 12.0 + i
+                power_kw = round((voltage * current) / 1000.0, 2)
+                r = MeterReading(
+                    meter_id=meters[i - 1].id,
+                    voltage=voltage,
+                    current=current,
+                    power_kw=power_kw,
+                    timestamp=datetime.now(timezone.utc),
+                )
+                db.add(r)
+
+            # 4. Seed 10 Alerts
+            statuses = ["ACTIVE", "RESOLVED"]
+            severities = ["HIGH", "MEDIUM", "LOW"]
+            for i in range(1, 11):
+                alt = Alert(
+                    meter_id=meters[i - 1].id,
+                    alert_type="OVERLOAD" if i % 2 == 0 else "VOLTAGE_FLUCTUATION",
+                    message=f"Alert #{i}: Automatic load monitoring warning triggered.",
+                    severity=severities[i % 3],
+                    status=statuses[i % 2],
+                    timestamp=datetime.now(timezone.utc),
+                )
+                db.add(alt)
+
+            # 5. Seed 10 Load Reports
+            for i in range(1, 11):
+                rep = LoadReport(
+                    zone_id=zones[i - 1].id,
+                    total_consumption_kw=150.0 + (i * 20),
+                    peak_load_kw=45.0 + (i * 5),
+                    created_at=datetime.now(timezone.utc),
+                )
+                db.add(rep)
+
+            db.commit()
+            logger.info("Successfully seeded 10 initial records for all modules.")
+    except Exception as e:
+        db.rollback()
+        logger.error("Seeding initial data failed: %s", e)
+    finally:
+        db.close()
 
 
 @asynccontextmanager
@@ -44,6 +123,8 @@ async def lifespan(app: FastAPI):
             logger.info("Checking database schema...")
             Base.metadata.create_all(bind=engine)
             logger.info("Database ready.")
+            # Automatically populate initial 10 records if DB is empty
+            seed_initial_data()
         except Exception:
             logger.exception("Database initialization failed.")
     yield
